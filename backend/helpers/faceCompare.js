@@ -15,21 +15,26 @@ export const loadModels = async () => {
 };
 
 export const compareFaces = async (refImageBase64, liveImageBase64) => {
-  const refImg = await canvas.loadImage(refImageBase64);
-  const liveImg = await canvas.loadImage(liveImageBase64);
-
-  const refDesc = await faceapi
-    .detectSingleFace(refImg)
-    .withFaceLandmarks()
-    .withFaceDescriptor();
-
-  const liveDesc = await faceapi
-    .detectSingleFace(liveImg)
-    .withFaceLandmarks()
-    .withFaceDescriptor();
-
-  if (!refDesc || !liveDesc) return false;
-
-  const distance = faceapi.euclideanDistance(refDesc.descriptor, liveDesc.descriptor);
-  return distance < 0.45; // Threshold: 0.45 for match
+  try {
+    const refImg = await canvas.loadImage(refImageBase64);
+    const liveImg = await canvas.loadImage(liveImageBase64);
+  
+    const refDesc = await faceapi
+      .detectSingleFace(refImg)
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+  
+    const liveDesc = await faceapi
+      .detectSingleFace(liveImg)
+      .withFaceLandmarks()
+      .withFaceDescriptor();
+  
+    if (!refDesc || !liveDesc) return false;
+  
+    const distance = faceapi.euclideanDistance(refDesc.descriptor, liveDesc.descriptor);
+    return distance < 0.45;
+  } catch (error) {
+    console.log("Error comparing faces:", error.message);
+    return false;
+  } // Threshold: 0.45 for match
 };

@@ -11,14 +11,17 @@ export const markAttendance = async (req, res) => {
     const user = await User.findById(userId);
     if (!user || !user.referenceImage) return res.status(404).json({ message: 'User or reference image not found' });
 
+    console.log("Is Match:");
     const isMatch = await compareFaces(user.referenceImage, image);
     if (!isMatch) return res.status(401).json({ message: 'Face does not match' });
+    console.log("Face matched successfully");
 
     const attendance = new Attendance({ userId, image });
     await attendance.save();
 
     res.status(201).json({ message: 'Attendance marked successfully', attendance });
   } catch (error) {
+    console.error("Error marking attendance:", error.message);
     res.status(500).json({ error: error.message });
   }
 };

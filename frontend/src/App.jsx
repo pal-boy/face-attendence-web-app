@@ -1,13 +1,21 @@
-import React from "react";
-import MarkAttendance from './pages/MarkAttendance.jsx'
+// src/App.jsx
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import MarkAttendance from './pages/MarkAttendance';
+import AttendanceDashboard from './pages/AttendanceDashboard';
+import Register from './pages/Register';
 
-function App() {
+const App = () => {
+  const token = localStorage.getItem('token');
+  const userId = localStorage.getItem('userId');
 
   return (
-    <>
-      <MarkAttendance />
-    </>
-  )
-}
+      <Routes>
+        <Route path="/" element={token && userId ? <Navigate to="/attendance" /> : <Register />} />
+        <Route path="/attendance" element={token && userId ? <MarkAttendance /> : <Navigate to="/" />} />
+        <Route path="/dashboard" element={token && userId ? <AttendanceDashboard /> : <Navigate to="/" />} />
+      </Routes>
+  );
+};
 
-export default App
+export default App;

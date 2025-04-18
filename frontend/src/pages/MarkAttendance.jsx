@@ -35,6 +35,7 @@ const MarkAttendance = () => {
           },
         }
       );
+      console.log("Attendance marked successfully:", res.data);
       toast.success(res.data.message);
       setCaptured(false);
       setPreview(null);

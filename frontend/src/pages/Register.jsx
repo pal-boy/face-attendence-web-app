@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import Webcam from 'react-webcam';
-import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { createAccount } from '../redux/slices/authSlice.js';
+import { useNavigate } from 'react-router-dom';
 
 const videoConstraints = {
   width: 300,
@@ -10,6 +12,8 @@ const videoConstraints = {
 };
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const webcamRef = useRef(null);
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'user' });
   const [refImage, setRefImage] = useState(null);
@@ -37,15 +41,20 @@ const Register = () => {
     if (!refImage) return toast.error('Please provide a reference image');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', {
+      const formData = {
         ...form,
         referenceImage: refImage
-      });
-      toast.success(res.data.message);
+      }
+      const res = await dispatch(createAccount(formData));
+      toast.success(res.payload.message);
+      if (res.payload.success) {
+        navigate('/attendance'); // Redirect to attendance page after successful registration
+      }
       setForm({ name: '', email: '', password: '', role: 'user' });
       setRefImage(null);
+      
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      toast.error(error.response?.payload?.message || 'Registration failed');
     }
   };
 

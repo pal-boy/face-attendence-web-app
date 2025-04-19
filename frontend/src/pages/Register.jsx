@@ -47,6 +47,7 @@ const Register = () => {
       }
       const res = await dispatch(createAccount(formData));
       toast.success(res.payload.message);
+      
       if (res.payload.success) {
         navigate('/attendance'); // Redirect to attendance page after successful registration
       }

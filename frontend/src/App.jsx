@@ -12,7 +12,7 @@ const App = () => {
   return (
       <Routes>
         <Route path="/" element={token && userId ? <Navigate to="/attendance" /> : <Register />} />
-        <Route path="/attendance" element={token && userId ? <MarkAttendance /> : <Navigate to="/" />} />
+        <Route path="/attendance" element={ <MarkAttendance />} />
         <Route path="/dashboard" element={token && userId ? <AttendanceDashboard /> : <Navigate to="/" />} />
       </Routes>
   );
